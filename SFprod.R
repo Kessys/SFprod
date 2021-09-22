@@ -1,5 +1,5 @@
 # Rotina para análise de fronteira estocástica de produção convencional
-SF.half <- function(fr.form, s2u.form, s2w.form, data = sys.parent()){
+SF.half <- function(fr.form, s2u.form, s2w.form, data = sys.parent()) {
         {
                 # Fronteira
                 frontier <- fr.form
@@ -580,7 +580,7 @@ SF.trunc <- function(fr.form, mu.form, s2u.form = ~1, s2w.form = ~1, data = sys.
 }
 
 # Rotina para análise de fronteira estocástica de produção na presença de variáveis endógenas
-SF.half1S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent()){
+SF.half1S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent()) {
         {# Fronteira
                 frontier <- fr.form
                 mf <- model.frame(frontier, data)
@@ -893,8 +893,8 @@ SF.half1S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent()
                 AIC <- - 2 * lnL + 2 * K
                 BIC <- - 2 * lnL + log(n) * K
         }
-        lista <- list("efficiency" = ef, "error" = erro, "fitted.y_without.corretion" = Y_est,
-                      "fitted.y_with.corretion" = yest, "table" = RESP, 
+        lista <- list("efficiency" = ef, "error" = erro, "fitted.y_without.correction" = Y_est,
+                      "fitted.y_with.correction" = yest, "table" = RESP, 
                       "summary.ef" = summary(ef), "sd.ef" = sd(ef, na.rm = TRUE),
                       "value" = -est$value, "AIC" = AIC, "BIC" = BIC, 
                       "cor pearson IV" = cor_p.iv, "cor spearman IV" = cor_s.iv,
@@ -905,7 +905,7 @@ SF.half1S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent()
                       "sample size" = n, "estimated parameters" = K)
         return(lista)
 }
-SF.half2S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent()){
+SF.half2S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent()) {
         {# Fronteira
                 frontier <- fr.form
                 mf <- model.frame(frontier, data)
@@ -1216,8 +1216,8 @@ SF.half2S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent()
                 AIC <- - 2 * lnL + 2 * K
                 BIC <- - 2 * lnL + log(n) * K
         }
-        lista <- list("efficiency" = ef, "error" = erro, "fitted.y_without.corretion" = Y_est,
-                      "fitted.y_with.corretion" = yest, "reg_IV" = result_IV, "table" = RESP,
+        lista <- list("efficiency" = ef, "error" = erro, "fitted.y_without.correction" = Y_est,
+                      "fitted.y_with.correction" = yest, "reg_IV" = result_IV, "table" = RESP,
                       "summary.ef" = summary(ef), "sd.ef" = sd(ef, na.rm = TRUE),
                       "value" = loglik, "AIC" = AIC, "BIC" = BIC, 
                       "cor pearson IV" = cor_p.iv, "cor spearman IV" = cor_s.iv,
@@ -1228,7 +1228,7 @@ SF.half2S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent()
                       "sample size" = n, "estimated parameters" = K)
         return(lista)
 }
-SF.exp1S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent()){
+SF.exp1S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent()) {
         {# Fronteira
                 frontier <- fr.form
                 mf <- model.frame(frontier, data)
@@ -1543,8 +1543,8 @@ SF.exp1S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent())
                 AIC <- - 2 * lnL + 2 * K
                 BIC <- - 2 * lnL + log(n) * K
         }
-        lista <- list("efficiency" = ef, "error" = erro, "fitted.y_without.corretion" = Y_est,
-                      "fitted.y_with.corretion" = yest, "table" = RESP,
+        lista <- list("efficiency" = ef, "error" = erro, "fitted.y_without.correction" = Y_est,
+                      "fitted.y_with.correction" = yest, "table" = RESP,
                       "summary.ef" = summary(ef), "sd.ef" = sd(ef, na.rm = TRUE),
                       "value" = -est$value, "AIC" = AIC, "BIC" = BIC, 
                       "cor pearson IV" = cor_p.iv, "cor spearman IV" = cor_s.iv,
@@ -1555,7 +1555,7 @@ SF.exp1S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent())
                       "sample size" = n, "estimated parameters" = K)
         return(lista)
 }
-SF.exp2S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent()){
+SF.exp2S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent()) {
         {# Fronteira
                 frontier <- fr.form
                 mf <- model.frame(frontier, data)
@@ -1870,8 +1870,8 @@ SF.exp2S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent())
                 AIC <- - 2 * lnL + 2 * K
                 BIC <- - 2 * lnL + log(n) * K
         }
-        lista <- list("efficiency" = ef, "error" = erro, "fitted.y_without.corretion" = Y_est,
-                      "fitted.y_with.corretion" = yest, "reg_IV" = result_IV, "table" = RESP,
+        lista <- list("efficiency" = ef, "error" = erro, "fitted.y_without.correction" = Y_est,
+                      "fitted.y_with.correction" = yest, "reg_IV" = result_IV, "table" = RESP,
                       "summary.ef" = summary(ef), "sd.ef" = sd(ef, na.rm = TRUE),
                       "value" = loglik, "AIC" = AIC, "BIC" = BIC, 
                       "cor pearson IV" = cor_p.iv, "cor spearman IV" = cor_s.iv,
@@ -1882,7 +1882,7 @@ SF.exp2S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent())
                       "sample size" = n, "estimated parameters" = K)
         return(lista)
 }
-SF.trunc1S <- function(fr.form, end.form, mu.form, s2u.form = ~1, s2w.form = ~1, data = sys.parent()){
+SF.trunc1S <- function(fr.form, end.form, mu.form, s2u.form = ~1, s2w.form = ~1, data = sys.parent()) {
         {# Fronteira
                 frontier <- fr.form
                 mf <- model.frame(frontier, data)
@@ -2195,8 +2195,8 @@ SF.trunc1S <- function(fr.form, end.form, mu.form, s2u.form = ~1, s2w.form = ~1,
                 AIC <- - 2 * lnL + 2 * K
                 BIC <- - 2 * lnL + log(n) * K
         }
-        lista <- list("efficiency" = ef, "error" = erro, "fitted.y_without.corretion" = Y_est,
-                      "fitted.y_with.corretion" = yest, "table" = RESP,
+        lista <- list("efficiency" = ef, "error" = erro, "fitted.y_without.correction" = Y_est,
+                      "fitted.y_with.correction" = yest, "table" = RESP,
                       "summary.ef" = summary(ef), "sd.ef" = sd(ef, na.rm = TRUE),
                       "value" = -est$value, "AIC" = AIC, "BIC" = BIC, 
                       "cor pearson IV" = cor_p.iv, "cor spearman IV" = cor_s.iv,
@@ -2207,7 +2207,7 @@ SF.trunc1S <- function(fr.form, end.form, mu.form, s2u.form = ~1, s2w.form = ~1,
                       "sample size" = n, "estimated parameters" = K)
         return(lista)
 }
-SF.trunc2S <- function(fr.form, end.form, mu.form, s2u.form = ~1, s2w.form = ~1, data = sys.parent()){
+SF.trunc2S <- function(fr.form, end.form, mu.form, s2u.form = ~1, s2w.form = ~1, data = sys.parent()) {
         {# Fronteira
                 frontier <- fr.form
                 mf <- model.frame(frontier, data)
@@ -2543,8 +2543,8 @@ SF.trunc2S <- function(fr.form, end.form, mu.form, s2u.form = ~1, s2w.form = ~1,
                 AIC <- - 2 * lnL + 2 * K
                 BIC <- - 2 * lnL + log(n) * K
         }
-        lista <- list("efficiency" = ef, "error" = erro, "fitted.y_without.corretion" = Y_est,
-                      "fitted.y_with.corretion" = yest, "reg_IV" = result_IV, "table" = RESP,
+        lista <- list("efficiency" = ef, "error" = erro, "fitted.y_without.correction" = Y_est,
+                      "fitted.y_with.correction" = yest, "reg_IV" = result_IV, "table" = RESP,
                       "summary.ef" = summary(ef), "sd.ef" = sd(ef, na.rm = TRUE),
                       "value" = loglik, "AIC" = AIC, "BIC" = BIC, 
                       "cor pearson IV" = cor_p.iv, "cor spearman IV" = cor_s.iv,

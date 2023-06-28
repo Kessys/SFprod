@@ -401,7 +401,7 @@ SF.trunc <- function(fr.form, mu.form, s2u.form = ~1, s2w.form = ~1, data = sys.
                 Y_fr <- model.response(mf, "numeric")
                 
                 Mu <- mu.form
-                Mi <- model.frame(Mu, dados)
+                Mi <- model.frame(Mu, data)
                 mi <- model.matrix(Mu, Mi)
                 
                 # Sigma_u and Sigma_w
@@ -635,12 +635,12 @@ SF.half1S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent()
                 # Part x
                 Z <- xend
                 delta <- matrix(z_p, ncol = p)
-                residuo <- yend - Z %*% delta
-                n <- nrow(residuo)
-                V <- crossprod(residuo) / n
+                residual <- yend - Z %*% delta
+                n <- nrow(residual)
+                V <- crossprod(residual) / n
                 
                 ## Likelihood of x
-                lx <- n * 0.5 * (- p * log(2 * pi) - log(det(V))) - 0.5 * sum(mahalanobis(residuo, 0, V))
+                lx <- n * 0.5 * (- p * log(2 * pi) - log(det(V))) - 0.5 * sum(mahalanobis(residual, 0, V))
                 
                 ## Part y|x
                 Y <- X_fr %*% y_p
@@ -655,7 +655,7 @@ SF.half1S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent()
                 sigma <- Sigma_u + Sigma_w
                 sigma_cw <- exp(W0)
                 cw <- sqrt(Sigma_w/sigma_cw)
-                omega <- residuo %*% Eta
+                omega <- residual %*% Eta
                 
                 e <- Y_fr - Y - cw * omega
                 
@@ -678,9 +678,9 @@ SF.half1S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent()
                 # Part x
                 Z <- xend
                 delta <- matrix(z_p, ncol = p)
-                residuo <- yend - Z %*% delta
-                n <- nrow(residuo)
-                V <- crossprod(residuo) / n
+                residual <- yend - Z %*% delta
+                n <- nrow(residual)
+                V <- crossprod(residual) / n
                 
                 ## Part y|x
                 Y <- X_fr %*% y_p
@@ -695,7 +695,7 @@ SF.half1S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent()
                 sigma <- Sigma_u + Sigma_w
                 sigma_cw <- as.vector(exp(W0))
                 cw <- sqrt(Sigma_w/sigma_cw)
-                omega <- as.vector(residuo %*% Eta)
+                omega <- as.vector(residual %*% Eta)
                 e <- as.vector(Y_fr - Y - cw * omega)
                 
                 zz <- - e * lambda / sqrt(sigma)
@@ -704,7 +704,7 @@ SF.half1S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent()
                 fdp <- dz; cdf <- pz; fdp_cdf <- fdp / cdf
                 valor <- e / sigma + lambda / sqrt(sigma) * fdp_cdf
                 
-                Part1 <- t(Z) %*% residuo %*% ginv(V)
+                Part1 <- t(Z) %*% residual %*% ginv(V)
                 Part2 <- - t(Eta %*% t(cw * valor) %*% Z)
                 g.end <- Part1 + Part2
                 
@@ -719,7 +719,7 @@ SF.half1S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent()
                                                                   (fdp_cdf * e * lambda / sqrt(sigma)) * (2 + lambda^2))) +
                                        (sigma_w0 * 0.5 * omega * cw * valor))
                 
-                g.eta <- t(residuo) %*% (cw * valor)
+                g.eta <- t(residual) %*% (cw * valor)
                 
                 g <- c(g.end, g.b, g.u, g.w, g.eta)
                 
@@ -810,13 +810,13 @@ SF.half1S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent()
                 
                 Z <- xend
                 delta <- matrix(z[1:k1], ncol = p)
-                residuo <- yend - Z %*% delta
+                residual <- yend - Z %*% delta
                 Y_est <- X_fr %*% est$par[c(k1 + 1):k2]
                 s2u <- exp(sigma_u %*% est$par[c(k2 + 1):k3])
                 s2w <- exp(sigma_w %*% est$par[c(k3 + 1):k4])
                 s2cw <- exp(est$par[c(k3 + 1):k4][1])
                 etas <- est$par[c(k4 + 1):kk]
-                yest <- Y_est + sqrt(s2w/s2cw) * residuo %*% etas
+                yest <- Y_est + sqrt(s2w/s2cw) * residual %*% etas
                 erro <- Y_fr - yest
                 s2 <- s2u + s2w
                 
@@ -838,12 +838,12 @@ SF.half1S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent()
                         # Part x
                         Z <- xend
                         delta <- matrix(z_p, ncol = p)
-                        residuo <- yend - Z %*% delta
-                        n <- nrow(residuo)
-                        V <- crossprod(residuo) / n
+                        residual <- yend - Z %*% delta
+                        n <- nrow(residual)
+                        V <- crossprod(residual) / n
                         
                         ## Likelihood of x
-                        lx <- n * 0.5 * (- p * log(2 * pi) - log(det(V))) - 0.5 * sum(mahalanobis(residuo, 0, V))
+                        lx <- n * 0.5 * (- p * log(2 * pi) - log(det(V))) - 0.5 * sum(mahalanobis(residual, 0, V))
                         
                         ## Part y|x
                         Y <- X_fr %*% y_p
@@ -858,7 +858,7 @@ SF.half1S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent()
                         sigma <- Sigma_u + Sigma_w
                         sigma_cw <- exp(W0)
                         cw <- sqrt(Sigma_w/sigma_cw)
-                        omega <- residuo %*% Eta
+                        omega <- residual %*% Eta
                         
                         e <- Y_fr - Y - cw * omega
                         
@@ -961,12 +961,12 @@ SF.exp1S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent())
                 # Part x
                 Z <- xend
                 delta <- matrix(z_p, ncol = p)
-                residuo <- yend - Z %*% delta
-                n <- nrow(residuo)
-                V <- crossprod(residuo) / n
+                residual <- yend - Z %*% delta
+                n <- nrow(residual)
+                V <- crossprod(residual) / n
                 
                 ## Likelihood of x
-                lx <- n * 0.5 * (- p * log(2 * pi) - log(det(V))) - 0.5 * sum(mahalanobis(residuo, 0, V))
+                lx <- n * 0.5 * (- p * log(2 * pi) - log(det(V))) - 0.5 * sum(mahalanobis(residual, 0, V))
                 
                 ## Part y|x
                 Y <- X_fr %*% y_p
@@ -981,7 +981,7 @@ SF.exp1S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent())
                 sigma <- Sigma_u + Sigma_w
                 sigma_cw <- exp(W0)
                 cw <- sqrt(Sigma_w/sigma_cw)
-                omega <- residuo %*% Eta
+                omega <- residual %*% Eta
                 
                 e <- Y_fr - Y - cw * omega
                 
@@ -1005,9 +1005,9 @@ SF.exp1S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent())
                 # Part x
                 Z <- xend
                 delta <- matrix(z_p, ncol = p)
-                residuo <- yend - Z %*% delta
-                n <- nrow(residuo)
-                V <- crossprod(residuo) / n
+                residual <- yend - Z %*% delta
+                n <- nrow(residual)
+                V <- crossprod(residual) / n
                 
                 ## Part y|x
                 Y <- X_fr %*% y_p
@@ -1022,7 +1022,7 @@ SF.exp1S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent())
                 sigma <- Sigma_u + Sigma_w
                 sigma_cw <- as.vector(exp(W0))
                 cw <- sqrt(Sigma_w/sigma_cw)
-                omega <- as.vector(residuo %*% Eta)
+                omega <- as.vector(residual %*% Eta)
                 e <- as.vector(Y_fr - Y - cw * omega)
                 
                 zz <- (-e - Sigma_w / sqrt(Sigma_u)) / sqrt(Sigma_w)
@@ -1031,7 +1031,7 @@ SF.exp1S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent())
                 fdp <- dz; cdf <- pz; fdp_cdf <- fdp / cdf
                 
                 valor <- (fdp_cdf / sqrt(Sigma_w) - 1 / sqrt(Sigma_u))
-                Part1 <- t(Z) %*% residuo %*% ginv(V)
+                Part1 <- t(Z) %*% residual %*% ginv(V)
                 Part2 <- t(- Eta %*% t(cw * valor) %*% Z)
                 
                 g.end <- Part1 + Part2
@@ -1046,7 +1046,7 @@ SF.exp1S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent())
                 g.w <- t(sigma_w) %*% ((0.5 * (1 / Sigma_u + fdp_cdf / sqrt(Sigma_w) * (e / Sigma_w - 1 / sqrt(Sigma_u)))) * Sigma_w) +
                         t(sigma_w0) %*% (0.5 * omega * cw * valor)
                 
-                g.eta <- t(residuo) %*% (cw * valor)
+                g.eta <- t(residual) %*% (cw * valor)
                 
                 g <- c(g.end, g.b, g.u, g.w, g.eta)
                 
@@ -1137,13 +1137,13 @@ SF.exp1S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent())
                 
                 Z <- xend
                 delta <- matrix(z[1:k1], ncol = p)
-                residuo <- yend - Z %*% delta
+                residual <- yend - Z %*% delta
                 Y_est <- X_fr %*% est$par[c(k1 + 1):k2]
                 s2u <- exp(sigma_u %*% est$par[c(k2 + 1):k3])
                 s2w <- exp(sigma_w %*% est$par[c(k3 + 1):k4])
                 s2cw <- exp(est$par[c(k3 + 1):k4][1])
                 etas <- est$par[c(k4 + 1):kk]
-                yest <- Y_est + sqrt(s2w/s2cw) * residuo %*% etas
+                yest <- Y_est + sqrt(s2w/s2cw) * residual %*% etas
                 erro <- Y_fr - yest
                 s2 <- s2u + s2w
                 
@@ -1165,12 +1165,12 @@ SF.exp1S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent())
                         # Part x
                         Z <- xend
                         delta <- matrix(z_p, ncol = p)
-                        residuo <- yend - Z %*% delta
-                        n <- nrow(residuo)
-                        V <- crossprod(residuo) / n
+                        residual <- yend - Z %*% delta
+                        n <- nrow(residual)
+                        V <- crossprod(residual) / n
                         
                         ## Likelihood of x
-                        lx <- n * 0.5 * (- p * log(2 * pi) - log(det(V))) - 0.5 * sum(mahalanobis(residuo, 0, V))
+                        lx <- n * 0.5 * (- p * log(2 * pi) - log(det(V))) - 0.5 * sum(mahalanobis(residual, 0, V))
                         
                         ## Part y|x
                         Y <- X_fr %*% y_p
@@ -1185,7 +1185,7 @@ SF.exp1S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent())
                         sigma <- Sigma_u + Sigma_w
                         sigma_cw <- exp(W0)
                         cw <- sqrt(Sigma_w/sigma_cw)
-                        omega <- residuo %*% Eta
+                        omega <- residual %*% Eta
                         
                         e <- Y_fr - Y - cw * omega
                         
@@ -1254,7 +1254,7 @@ SF.trunc1S <- function(fr.form, end.form, mu.form, s2u.form = ~1, s2w.form = ~1,
                 p <- ncol(as.matrix(yend))
                 
                 Mu <- mu.form
-                Mi <- model.frame(Mu, dados)
+                Mi <- model.frame(Mu, data)
                 mi <- model.matrix(Mu, Mi)
                 
                 # Sigma_u and Sigma_w
@@ -1296,12 +1296,12 @@ SF.trunc1S <- function(fr.form, end.form, mu.form, s2u.form = ~1, s2w.form = ~1,
                 # Part x
                 Z <- xend
                 delta <- matrix(z_p, ncol = p)
-                residuo <- yend - Z %*% delta
-                n <- nrow(residuo)
-                V <- crossprod(residuo) / n
+                residual <- yend - Z %*% delta
+                n <- nrow(residual)
+                V <- crossprod(residual) / n
                 
                 ## Likelihood of x
-                lx <- n * 0.5 * (- p * log(2 * pi) - log(det(V))) - 0.5 * sum(mahalanobis(residuo, 0, V))
+                lx <- n * 0.5 * (- p * log(2 * pi) - log(det(V))) - 0.5 * sum(mahalanobis(residual, 0, V))
                 
                 ## Part y|x
                 Y <- X_fr %*% y_p
@@ -1317,7 +1317,7 @@ SF.trunc1S <- function(fr.form, end.form, mu.form, s2u.form = ~1, s2w.form = ~1,
                 sigma <- Sigma_u + Sigma_w
                 sigma_cw <- exp(W0)
                 cw <- sqrt(Sigma_w/sigma_cw)
-                omega <- residuo %*% Eta
+                omega <- residual %*% Eta
                 
                 e <- Y_fr - Y - cw * omega
                 
@@ -1346,9 +1346,9 @@ SF.trunc1S <- function(fr.form, end.form, mu.form, s2u.form = ~1, s2w.form = ~1,
                 # Part x
                 Z <- xend
                 delta <- matrix(z_p, ncol = p)
-                residuo <- yend - Z %*% delta
-                n <- nrow(residuo)
-                V <- crossprod(residuo) / n
+                residual <- yend - Z %*% delta
+                n <- nrow(residual)
+                V <- crossprod(residual) / n
                 
                 ## Part y|x
                 Y <- X_fr %*% y_p
@@ -1364,7 +1364,7 @@ SF.trunc1S <- function(fr.form, end.form, mu.form, s2u.form = ~1, s2w.form = ~1,
                 sigma <- Sigma_u + Sigma_w
                 sigma_cw <- as.vector(exp(W0))
                 cw <- sqrt(Sigma_w/sigma_cw)
-                omega <- as.vector(residuo %*% Eta)
+                omega <- as.vector(residual %*% Eta)
                 e <- as.vector(Y_fr - Y - cw * omega)
                 
                 aa <- mu / sqrt(sigma) * sqrt(1 + lambda^-2)
@@ -1380,7 +1380,7 @@ SF.trunc1S <- function(fr.form, end.form, mu.form, s2u.form = ~1, s2w.form = ~1,
                 
                 valor <- as.vector((e + mu) / sigma + (lambda / sqrt(sigma)) * db_pb)
                 
-                Part1 <- t(Z) %*% residuo %*% ginv(V)
+                Part1 <- t(Z) %*% residual %*% ginv(V)
                 Part2 <- - t(Eta %*% t(cw * valor) %*% Z)
                 g.end <- Part1 + Part2
                 
@@ -1394,7 +1394,7 @@ SF.trunc1S <- function(fr.form, end.form, mu.form, s2u.form = ~1, s2w.form = ~1,
                 Partw <- as.vector(lambda / sqrt(sigma) * db_pb * (mu + 2 * e + e * lambda^2))
                 g.w <- t(Sigma_w) %*% (sigma_w * (0.5 / sigma * (cc + Partw - 1)))
                 
-                g.eta <- t(residuo) %*% (cw * valor)
+                g.eta <- t(residual) %*% (cw * valor)
                 
                 g <- c(g.end, g.b, g.mu, g.u, g.w, g.eta)
                 
@@ -1456,14 +1456,14 @@ SF.trunc1S <- function(fr.form, end.form, mu.form, s2u.form = ~1, s2w.form = ~1,
                 
                 Z <- xend
                 delta <- matrix(z[1:k1], ncol = p)
-                residuo <- yend - Z %*% delta
+                residual <- yend - Z %*% delta
                 Y_est <- X_fr %*% est$par[c(k1 + 1):k2]
                 mui <- mi %*% est$par[c(k2 + 1):k3]
                 s2u <- exp(sigma_u %*% est$par[c(k3 + 1):k4])
                 s2w <- exp(sigma_w %*% est$par[c(k4 + 1):k5])
                 s2cw <- exp(est$par[c(k4 + 1):k5][1])
                 etas <- est$par[c(k5 + 1):kk]
-                yest <- Y_est + sqrt(s2w/s2cw) * residuo %*% etas
+                yest <- Y_est + sqrt(s2w/s2cw) * residual %*% etas
                 erro <- Y_fr - yest
                 s2 <- s2u + s2w
                 
@@ -1486,12 +1486,12 @@ SF.trunc1S <- function(fr.form, end.form, mu.form, s2u.form = ~1, s2w.form = ~1,
                         # Part x
                         Z <- xend
                         delta <- matrix(z_p, ncol = p)
-                        residuo <- yend - Z %*% delta
-                        n <- nrow(residuo)
-                        V <- crossprod(residuo) / n
+                        residual <- yend - Z %*% delta
+                        n <- nrow(residual)
+                        V <- crossprod(residual) / n
                         
                         ## Likelihood of x
-                        lx <- n * 0.5 * (- p * log(2 * pi) - log(det(V))) - 0.5 * sum(mahalanobis(residuo, 0, V))
+                        lx <- n * 0.5 * (- p * log(2 * pi) - log(det(V))) - 0.5 * sum(mahalanobis(residual, 0, V))
                         
                         ## Part y|x
                         Y <- X_fr %*% y_p
@@ -1507,7 +1507,7 @@ SF.trunc1S <- function(fr.form, end.form, mu.form, s2u.form = ~1, s2w.form = ~1,
                         sigma <- Sigma_u + Sigma_w
                         sigma_cw <- exp(W0)
                         cw <- sqrt(Sigma_w/sigma_cw)
-                        omega <- residuo %*% Eta
+                        omega <- residual %*% Eta
                         
                         e <- Y_fr - Y - cw * omega
                         
@@ -1593,7 +1593,7 @@ SF.half2S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent()
                 
                 # Step 1 - OLS of the Endogenous Variables
                 ols <- lm(End, data); if(length(names(ols$coefficients)) > 1){names(ols$coefficients)[1] <- c("constant")} else{rownames(ols$coefficients)[1] <- c("constant")}
-                residuo <- as.matrix(residuals(ols))
+                residual <- as.matrix(residuals(ols))
                 
                 yend_est <- as.matrix(fitted(ols))
                 if(ncol(yend_est) > 1){colnames(yend_est) <- paste(colnames(yend), "IV", sep = ".")}
@@ -1606,7 +1606,7 @@ SF.half2S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent()
                 fr <- lm(frontier, data = data); names(fr$coefficients)[1] <- c("constant")
                 u.p <- c("constant" = 1, rep(0, ncol(sigma_u)-1)); if(length(names(u.p)) > 1){names(u.p)[2:length(u.p)] <- colnames(sigma_u)[2:length(u.p)]}
                 w.p <- c("constant" = 1, rep(0, ncol(sigma_w)-1)); if(length(names(w.p)) > 1){names(w.p)[2:length(w.p)] <- colnames(sigma_w)[2:length(w.p)]}
-                res.p <- rep(0, p); names(res.p) <- paste("residuo", seq(1:p), sep = ".")
+                res.p <- rep(0, p); names(res.p) <- paste("residual", seq(1:p), sep = ".")
                 
                 z <- c(fr$coefficients, u.p, w.p, res.p)
                 names(z) <- make.names(names(z), unique=T)
@@ -1625,14 +1625,14 @@ SF.half2S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent()
                 Y <- X_fr %*% x_p
                 U <- sigma_u %*% u_p
                 W <- sigma_w %*% w_p
-                Residuo <- residuo %*% res_p
+                Residual <- residual %*% res_p
                 
                 Sigma_u <- exp(U)
                 Sigma_w <- exp(W)
                 lambda <- sqrt(Sigma_u/Sigma_w)
                 sigma <- Sigma_u + Sigma_w
                 
-                e <- Y_fr - Y - Residuo
+                e <- Y_fr - Y - Residual
                 
                 ly.x.half <- 0.5 * log(2 / pi) - 0.5 * log(sigma) + pnorm(-lambda * e / sqrt(sigma), log = TRUE) - 0.5 * e^2 / sigma
                 
@@ -1649,14 +1649,14 @@ SF.half2S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent()
                 Y <- X_fr %*% x_p
                 U <- sigma_u %*% u_p
                 W <- sigma_w %*% w_p
-                Residuo <- residuo %*% res_p
+                Residual <- residual %*% res_p
                 
                 Sigma_u <- exp(U)
                 Sigma_w <- exp(W)
                 lambda <- sqrt(Sigma_u/Sigma_w)
                 sigma <- Sigma_u + Sigma_w
                 
-                e <- Y_fr - Y - Residuo
+                e <- Y_fr - Y - Residual
                 
                 zz <- - e * lambda / sqrt(sigma)
                 dz <- pmax(dnorm(zz), 9.88131291682493e-324)
@@ -1667,7 +1667,7 @@ SF.half2S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent()
                 g.b <- t(X_fr) %*% valor
                 g.u <- t(sigma_u) %*% as.vector((0.5 / sigma * (e^2 / sigma - e / (lambda * sqrt(sigma)) * fdp_cdf - 1)) * Sigma_u)
                 g.w <- t(sigma_w) %*% as.vector((0.5 / sigma * (e^2 / sigma + e * lambda * (2 + lambda^2) * fdp_cdf / sqrt(sigma) - 1)) * Sigma_w)
-                g.eta <- t(residuo) %*% valor
+                g.eta <- t(residual) %*% valor
                 
                 g <- c(g.b, g.u, g.w, g.eta)
                 
@@ -1678,17 +1678,17 @@ SF.half2S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent()
         #round(data.frame("numerical" = grad(ll,est$par), "analytical" = G(est$par)), 4)
         {
                 Z <- xend
-                g11 <- lapply(1:p, function(x) cbind(-2 * Z * residuo[,x]))
+                g11 <- lapply(1:p, function(x) cbind(-2 * Z * residual[,x]))
                 G11 <- matrix(unlist(g11), nrow = dim(Z)[1L], ncol = dim(Z)[2L]*p)
                 
                 b <- est$par
                 Y_est <- X_fr %*% b[1:k1]
                 s2u <- exp(sigma_u %*% b[c(k1 + 1):k2])
                 s2w <- exp(sigma_w %*% b[c(k2 + 1):k3])
-                residuos <- residuo %*% b[c(k3 + 1):kk]
+                Residuals <- residual %*% b[c(k3 + 1):kk]
                 sigma <- s2u + s2w
                 lambda <- sqrt(s2u/s2w)
-                yest <- Y_est + residuos
+                yest <- Y_est + Residuals
                 erro <- Y_fr - yest
                 
                 G2 <- function(z){
@@ -1700,14 +1700,14 @@ SF.half2S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent()
                         Y <- X_fr %*% x_p
                         U <- sigma_u %*% u_p
                         W <- sigma_w %*% w_p
-                        Residuo <- residuo %*% res_p
+                        Residual <- residual %*% res_p
                         
                         Sigma_u <- exp(U)
                         Sigma_w <- exp(W)
                         lambda <- sqrt(Sigma_u / Sigma_w)
                         sigma <- Sigma_u + Sigma_w
                         
-                        e <- Y_fr - Y - Residuo
+                        e <- Y_fr - Y - Residual
                         
                         zz <- - e * lambda / sqrt(sigma)
                         dz <- pmax(dnorm(zz), 9.88131291682493e-324)
@@ -1718,7 +1718,7 @@ SF.half2S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent()
                         g.b <- X_fr * valor
                         g.u <- sigma_u * as.vector((0.5 / sigma * (e ^ 2 / sigma - e / (lambda * sqrt(sigma)) * fdp_cdf - 1)) * Sigma_u)
                         g.w <- sigma_w * as.vector((0.5 / sigma * (e ^ 2 / sigma + e * lambda * (2 + lambda ^ 2) * fdp_cdf / sqrt(sigma) - 1)) * Sigma_w)
-                        g.eta <- residuo * valor # c(0,0)
+                        g.eta <- residual * valor # c(0,0)
                         
                         g <- cbind(g.b, g.u, g.w, g.eta)
                         
@@ -1839,14 +1839,14 @@ SF.half2S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent()
                         Y <- X_fr %*% x_p
                         U <- sigma_u %*% u_p
                         W <- sigma_w %*% w_p
-                        Residuo <- residuo %*% res_p
+                        Residual <- residual %*% res_p
                         
                         Sigma_u <- exp(U)
                         Sigma_w <- exp(W)
                         lambda <- sqrt(Sigma_u/Sigma_w)
                         sigma <- Sigma_u + Sigma_w
                         
-                        e <- Y_fr - Y - Residuo
+                        e <- Y_fr - Y - Residual
                         
                         ly.x.half <- 0.5 * log(2 / pi) - 0.5 * log(sigma) + pnorm(-lambda * e / sqrt(sigma), log = TRUE) - 0.5 * e^2 / sigma
                         
@@ -1870,9 +1870,9 @@ SF.half2S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent()
                 spearman <- cor(Y_est, Y_fr, method = "spearman")
                 
                 n <- length(Y_fr)
-                W <- crossprod(residuo) / n
+                W <- crossprod(residual) / n
                 ## Likelihood of x
-                lx <- n * 0.5 * (- p * log(2 * pi) - log(det(W))) - 0.5 * sum(mahalanobis(residuo, 0, W))
+                lx <- n * 0.5 * (- p * log(2 * pi) - log(det(W))) - 0.5 * sum(mahalanobis(residual, 0, W))
                 loglik <- lx - est$value
                 lnL <- loglik
                 K <- length(b)
@@ -1917,7 +1917,7 @@ SF.exp2S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent())
                 
                 # Step 1 - OLS of the Endogenous Variables
                 ols <- lm(End, data); if(length(names(ols$coefficients)) > 1){names(ols$coefficients)[1] <- c("constant")} else{rownames(ols$coefficients)[1] <- c("constant")}
-                residuo <- as.matrix(residuals(ols))
+                residual <- as.matrix(residuals(ols))
                 
                 yend_est <- as.matrix(fitted(ols))
                 if(ncol(yend_est) > 1){colnames(yend_est) <- paste(colnames(yend), "IV", sep = ".")}
@@ -1930,7 +1930,7 @@ SF.exp2S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent())
                 fr <- lm(frontier, data = data); names(fr$coefficients)[1] <- c("constant")
                 u.p <- c("constant" = 1, rep(0, ncol(sigma_u)-1)); if(length(names(u.p)) > 1){names(u.p)[2:length(u.p)] <- colnames(sigma_u)[2:length(u.p)]}
                 w.p <- c("constant" = 1, rep(0, ncol(sigma_w)-1)); if(length(names(w.p)) > 1){names(w.p)[2:length(w.p)] <- colnames(sigma_w)[2:length(w.p)]}
-                res.p <- rep(0, p); names(res.p) <- paste("residuo", seq(1:p), sep = ".")
+                res.p <- rep(0, p); names(res.p) <- paste("residual", seq(1:p), sep = ".")
                 
                 z <- c(fr$coefficients, u.p, w.p, res.p)
                 names(z) <- make.names(names(z), unique=T)
@@ -1949,14 +1949,14 @@ SF.exp2S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent())
                 Y <- X_fr %*% x_p
                 U <- sigma_u %*% u_p
                 W <- sigma_w %*% w_p
-                Residuo <- residuo %*% res_p
+                Residual <- residual %*% res_p
                 
                 Sigma_u <- exp(U)
                 Sigma_w <- exp(W)
                 lambda <- sqrt(Sigma_u/Sigma_w)
                 sigma <- Sigma_u + Sigma_w
                 
-                e <- Y_fr - Y - Residuo
+                e <- Y_fr - Y - Residual
                 
                 zz <- (-e - Sigma_w / sqrt(Sigma_u)) / sqrt(Sigma_w)
                 pz <- pnorm(zz, log = TRUE)
@@ -1975,14 +1975,14 @@ SF.exp2S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent())
                 Y <- X_fr %*% x_p
                 U <- sigma_u %*% u_p
                 W <- sigma_w %*% w_p
-                Residuo <- residuo %*% res_p
+                Residual <- residual %*% res_p
                 
                 Sigma_u <- exp(U)
                 Sigma_w <- exp(W)
                 lambda <- sqrt(Sigma_u/Sigma_w)
                 sigma <- Sigma_u + Sigma_w
                 
-                e <- Y_fr - Y - Residuo
+                e <- Y_fr - Y - Residual
                 
                 zz <- (-e - Sigma_w / sqrt(Sigma_u)) / sqrt(Sigma_w)
                 dz <- pmax(dnorm(zz), 9.88131291682493e-324)
@@ -1993,7 +1993,7 @@ SF.exp2S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent())
                 g.b <- t(X_fr) %*% valor
                 g.u <- t(sigma_u) %*% as.vector((0.5 / Sigma_u * (fdp_cdf * sqrt(Sigma_w / Sigma_u) - Sigma_w / Sigma_u - e / sqrt(Sigma_u) - 1)) * Sigma_u)
                 g.w <- t(sigma_w) %*% as.vector((0.5 * (1 / Sigma_u + fdp_cdf / sqrt(Sigma_w) * (e / Sigma_w - 1 / sqrt(Sigma_u)))) * Sigma_w)
-                g.eta <- t(residuo) %*% valor
+                g.eta <- t(residual) %*% valor
                 
                 g <- c(g.b, g.u, g.w, g.eta)
                 
@@ -2004,17 +2004,17 @@ SF.exp2S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent())
         #round(data.frame("numerical" = grad(ll,est$par), "analytical" = G(est$par)), 4)
         {
                 Z <- xend
-                g11 <- lapply(1:p, function(x) cbind(-2 * Z * residuo[,x]))
+                g11 <- lapply(1:p, function(x) cbind(-2 * Z * residual[,x]))
                 G11 <- matrix(unlist(g11), nrow = dim(Z)[1L], ncol = dim(Z)[2L]*p)
                 
                 b <- est$par
                 Y_est <- X_fr %*% b[1:k1]
                 s2u <- exp(sigma_u %*% b[c(k1 + 1):k2])
                 s2w <- exp(sigma_w %*% b[c(k2 + 1):k3])
-                residuos <- residuo %*% b[c(k3 + 1):kk]
+                Residuals <- residual %*% b[c(k3 + 1):kk]
                 sigma <- s2u + s2w
                 lambda <- sqrt(s2u/s2w)
-                yest <- Y_est + residuos
+                yest <- Y_est + Residuals
                 erro <- Y_fr - yest
                 
                 G2 <- function(z){
@@ -2026,14 +2026,14 @@ SF.exp2S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent())
                         Y <- X_fr %*% x_p
                         U <- sigma_u %*% u_p
                         W <- sigma_w %*% w_p
-                        Residuo <- residuo %*% res_p
+                        Residual <- residual %*% res_p
                         
                         Sigma_u <- exp(U)
                         Sigma_w <- exp(W)
                         lambda <- sqrt(Sigma_u/Sigma_w)
                         sigma <- Sigma_u + Sigma_w
                         
-                        e <- Y_fr - Y - Residuo
+                        e <- Y_fr - Y - Residual
                         
                         zz <- (-e - Sigma_w / sqrt(Sigma_u)) / sqrt(Sigma_w)
                         dz <- pmax(dnorm(zz), 9.88131291682493e-324)
@@ -2044,7 +2044,7 @@ SF.exp2S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent())
                         g.b <- X_fr * valor
                         g.u <- sigma_u * as.vector((0.5 / Sigma_u * (fdp_cdf * sqrt(Sigma_w / Sigma_u) - Sigma_w / Sigma_u - e / sqrt(Sigma_u) - 1)) * Sigma_u)
                         g.w <- sigma_w * as.vector((0.5 * (1 / Sigma_u + fdp_cdf / sqrt(Sigma_w) * (e / Sigma_w - 1 / sqrt(Sigma_u)))) * Sigma_w)
-                        g.eta <- residuo * valor
+                        g.eta <- residual * valor
                         
                         g <- cbind(g.b, g.u, g.w, g.eta)
                         
@@ -2165,14 +2165,14 @@ SF.exp2S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent())
                         Y <- X_fr %*% x_p
                         U <- sigma_u %*% u_p
                         W <- sigma_w %*% w_p
-                        Residuo <- residuo %*% res_p
+                        Residual <- residual %*% res_p
                         
                         Sigma_u <- exp(U)
                         Sigma_w <- exp(W)
                         lambda <- sqrt(Sigma_u/Sigma_w)
                         sigma <- Sigma_u + Sigma_w
                         
-                        e <- Y_fr - Y - Residuo
+                        e <- Y_fr - Y - Residual
                         
                         zz <- (-e - Sigma_w / sqrt(Sigma_u)) / sqrt(Sigma_w)
                         pz <- pnorm(zz, log = TRUE)
@@ -2198,9 +2198,9 @@ SF.exp2S <- function(fr.form, end.form, s2u.form, s2w.form, data = sys.parent())
                 spearman <- cor(Y_est, Y_fr, method = "spearman")
                 
                 n <- length(Y_fr)
-                W <- crossprod(residuo) / n
+                W <- crossprod(residual) / n
                 ## Likelihood of x
-                lx <- n * 0.5 * (- p * log(2 * pi) - log(det(W))) - 0.5 * sum(mahalanobis(residuo, 0, W))
+                lx <- n * 0.5 * (- p * log(2 * pi) - log(det(W))) - 0.5 * sum(mahalanobis(residual, 0, W))
                 loglik <- lx - est$value
                 lnL <- loglik
                 K <- length(b)
@@ -2235,7 +2235,7 @@ SF.trunc2S <- function(fr.form, end.form, mu.form, s2u.form = ~1, s2w.form = ~1,
                 p <- ncol(as.matrix(yend))
                 
                 Mu <- mu.form
-                Mi <- model.frame(Mu, dados)
+                Mi <- model.frame(Mu, data)
                 mi <- model.matrix(Mu, Mi)
                 
                 # Sigma_u and Sigma_w
@@ -2249,7 +2249,7 @@ SF.trunc2S <- function(fr.form, end.form, mu.form, s2u.form = ~1, s2w.form = ~1,
                 
                 # Step 1 - OLS of the Endogenous Variables
                 ols <- lm(End, data); if(length(names(ols$coefficients)) > 1){names(ols$coefficients)[1] <- c("constant")} else{rownames(ols$coefficients)[1] <- c("constant")}
-                residuo <- as.matrix(residuals(ols))
+                residual <- as.matrix(residuals(ols))
                 
                 yend_est <- as.matrix(fitted(ols))
                 if(ncol(yend_est) > 1){colnames(yend_est) <- paste(colnames(yend), "IV", sep = ".")}
@@ -2263,7 +2263,7 @@ SF.trunc2S <- function(fr.form, end.form, mu.form, s2u.form = ~1, s2w.form = ~1,
                 mu.p <- c("constant" = 1, rep(0, ncol(mi) - 1)); if(length(names(mu.p)) > 1){names(mu.p)[2:length(mu.p)] <- colnames(mi)[2:length(mu.p)]}
                 u.p <- c("constant" = 1)
                 w.p <- c("constant" = 1)
-                res.p <- rep(0, p); names(res.p) <- paste("residuo", seq(1:p), sep = ".")
+                res.p <- rep(0, p); names(res.p) <- paste("residual", seq(1:p), sep = ".")
                 
                 z <- c(fr$coefficients, mu.p, u.p, w.p, res.p)
                 names(z) <- make.names(names(z), unique=T)
@@ -2285,14 +2285,14 @@ SF.trunc2S <- function(fr.form, end.form, mu.form, s2u.form = ~1, s2w.form = ~1,
                 mu <- mi %*% mu_p
                 U <- sigma_u %*% u_p
                 W <- sigma_w %*% w_p
-                Residuo <- residuo %*% res_p
+                Residual <- residual %*% res_p
                 
                 Sigma_u <- exp(U)
                 Sigma_w <- exp(W)
                 lambda <- sqrt(Sigma_u/Sigma_w)
                 sigma <- Sigma_u + Sigma_w
                 
-                e <- Y_fr - Y - Residuo
+                e <- Y_fr - Y - Residual
                 
                 aa <- mu / sqrt(sigma) * sqrt(1 + lambda^-2)
                 pa <- pmax(pnorm(aa), 9.88131291682493e-324)
@@ -2317,14 +2317,14 @@ SF.trunc2S <- function(fr.form, end.form, mu.form, s2u.form = ~1, s2w.form = ~1,
                 mu <- mi %*% mu_p
                 U <- sigma_u %*% u_p
                 W <- sigma_w %*% w_p
-                Residuo <- residuo %*% res_p
+                Residual <- residual %*% res_p
                 
                 Sigma_u <- exp(U)
                 Sigma_w <- exp(W)
                 lambda <- sqrt(Sigma_u/Sigma_w)
                 sigma <- Sigma_u + Sigma_w
                 
-                e <- Y_fr - Y - Residuo
+                e <- Y_fr - Y - Residual
                 
                 aa <- mu / sqrt(sigma) * sqrt(1 + lambda^-2)
                 da <- pmax(dnorm(aa), 9.88131291682493e-324)
@@ -2349,7 +2349,7 @@ SF.trunc2S <- function(fr.form, end.form, mu.form, s2u.form = ~1, s2w.form = ~1,
                 Partw <- lambda / sqrt(sigma) * db_pb * (mu + 2 * e + e * lambda^2)
                 g.w <- t(sigma_w) %*% as.vector((0.5 / sigma * (cc + Partw - 1)) * Sigma_w)
                 
-                g.eta <- t(residuo) %*% valor
+                g.eta <- t(residual) %*% valor
                 
                 g <- c(g.b, g.mu, g.u, g.w, g.eta)
                 
@@ -2360,7 +2360,7 @@ SF.trunc2S <- function(fr.form, end.form, mu.form, s2u.form = ~1, s2w.form = ~1,
         #round(data.frame("numerical" = grad(ll,est$par), "analytical" = G(est$par)), 4)
         {        
                 Z <- xend
-                g11 <- lapply(1:p, function(x) cbind(-2 * Z * residuo[,x]))
+                g11 <- lapply(1:p, function(x) cbind(-2 * Z * residual[,x]))
                 G11 <- matrix(unlist(g11), nrow = dim(Z)[1L], ncol = dim(Z)[2L]*p)
                 
                 b <- est$par
@@ -2368,10 +2368,10 @@ SF.trunc2S <- function(fr.form, end.form, mu.form, s2u.form = ~1, s2w.form = ~1,
                 mu <- mi %*% b[c(k1 + 1):k2]
                 s2u <- exp(sigma_u %*% b[c(k2 + 1):k3])
                 s2w <- exp(sigma_w %*% b[c(k3 + 1):k4])
-                residuos <- residuo %*% b[c(k4 + 1):kk]
+                Residuals <- residual %*% b[c(k4 + 1):kk]
                 sigma <- s2u + s2w
                 lambda <- sqrt(s2u/s2w)
-                yest <- Y_est + residuos
+                yest <- Y_est + Residuals
                 erro <- Y_fr - yest
                 
                 G2 <- function(z){
@@ -2385,14 +2385,14 @@ SF.trunc2S <- function(fr.form, end.form, mu.form, s2u.form = ~1, s2w.form = ~1,
                         mu <- mi %*% mu_p
                         U <- sigma_u %*% u_p
                         W <- sigma_w %*% w_p
-                        Residuo <- residuo %*% res_p
+                        Residual <- residual %*% res_p
                         
                         Sigma_u <- exp(U)
                         Sigma_w <- exp(W)
                         lambda <- sqrt(Sigma_u/Sigma_w)
                         sigma <- Sigma_u + Sigma_w
                         
-                        e <- Y_fr - Y - Residuo
+                        e <- Y_fr - Y - Residual
                         
                         aa <- mu / sqrt(sigma) * sqrt(1 + lambda^-2)
                         da <- pmax(dnorm(aa), 9.88131291682493e-324)
@@ -2417,7 +2417,7 @@ SF.trunc2S <- function(fr.form, end.form, mu.form, s2u.form = ~1, s2w.form = ~1,
                         Partw <- lambda / sqrt(sigma) * db_pb * (mu + 2 * e + e * lambda^2)
                         g.w <- sigma_w * as.vector((0.5 / sigma * (cc + Partw - 1)) * Sigma_w)
                         
-                        g.eta <- residuo * valor
+                        g.eta <- residual * valor
                         
                         g <- cbind(g.b, g.mu, g.u, g.w, g.eta)
                         
@@ -2510,14 +2510,14 @@ SF.trunc2S <- function(fr.form, end.form, mu.form, s2u.form = ~1, s2w.form = ~1,
                         mu <- mi %*% mu_p
                         U <- sigma_u %*% u_p
                         W <- sigma_w %*% w_p
-                        Residuo <- residuo %*% res_p
+                        Residual <- residual %*% res_p
                         
                         Sigma_u <- exp(U)
                         Sigma_w <- exp(W)
                         lambda <- sqrt(Sigma_u/Sigma_w)
                         sigma <- Sigma_u + Sigma_w
                         
-                        e <- Y_fr - Y - Residuo
+                        e <- Y_fr - Y - Residual
                         
                         aa <- mu / sqrt(sigma) * sqrt(1 + lambda^-2)
                         pa <- pmax(pnorm(aa), 9.88131291682493e-324)
@@ -2547,9 +2547,9 @@ SF.trunc2S <- function(fr.form, end.form, mu.form, s2u.form = ~1, s2w.form = ~1,
                 spearman <- cor(Y_est, Y_fr, method = "spearman")
                 
                 n <- length(Y_fr)
-                W <- crossprod(residuo) / n
+                W <- crossprod(residual) / n
                 ## Likelihood of x
-                lx <- n * 0.5 * (- p * log(2 * pi) - log(det(W))) - 0.5 * sum(mahalanobis(residuo, 0, W))
+                lx <- n * 0.5 * (- p * log(2 * pi) - log(det(W))) - 0.5 * sum(mahalanobis(residual, 0, W))
                 loglik <- lx - est$value
                 lnL <- loglik
                 K <- length(b)
